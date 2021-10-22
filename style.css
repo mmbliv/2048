@@ -1,0 +1,14 @@
+.grid {
+  display: grid;
+  height: 400px;
+  width: 400px;
+  background-color: lightblue;
+  grid-template-columns: repeat(4, 1fr);
+}
+.grid div {
+  width: 100px;
+  height: 100px;
+  background-color: lightcoral;
+  font-size: xx-large;
+  border: 1px solid gray;
+}

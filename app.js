@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const gridDisplay = document.querySelector(".grid");
   // create a play border
   let squares = [];
+  let switchRight = true;
+  let switchLeft = true;
+  let switchUp = true;
+  let switchDown = true;
+  console.log(switchRight);
   function createBorder() {
     for (let i = 0; i < 16; i++) {
       square = document.createElement("div");
@@ -15,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createBorder();
   // generate a random num
   function generateNum() {
+    console.log("gen");
     let randomNum = Math.floor(Math.random() * 16);
     if (squares[randomNum].innerHTML == 0) {
       squares[randomNum].innerHTML = 2;
@@ -23,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // swipe to the right
   function swipeRight() {
+    let isNeedToSwipe = false;
     for (let i = 0; i < 16; i++) {
       if (i % 4 == 0) {
         let rowOne = squares[i].innerHTML;
@@ -35,20 +42,28 @@ document.addEventListener("DOMContentLoaded", () => {
           parseInt(rowThree),
           parseInt(rowFour),
         ];
-        let numInRow = row.filter((num) => num);
-        let missing = 4 - numInRow.length;
-        let addZeros = new Array(missing).fill(0);
-        let newRow = addZeros.concat(numInRow);
-        squares[i].innerHTML = newRow[0];
-        squares[i + 1].innerHTML = newRow[1];
-        squares[i + 2].innerHTML = newRow[2];
-        squares[i + 3].innerHTML = newRow[3];
+        for (let j = 0; j < 3; j++) {
+          if (row[j] !== 0 && row[j + 1] === 0) {
+            isNeedToSwipe = true;
+            let numInRow = row.filter((num) => num);
+            let missing = 4 - numInRow.length;
+            let addZeros = new Array(missing).fill(0);
+            let newRow = addZeros.concat(numInRow);
+            squares[i].innerHTML = newRow[0];
+            squares[i + 1].innerHTML = newRow[1];
+            squares[i + 2].innerHTML = newRow[2];
+            squares[i + 3].innerHTML = newRow[3];
+          }
+        }
       }
     }
+    console.log(isNeedToSwipe + "aaaa");
+    return isNeedToSwipe;
   }
 
-  //   swipe to left
+  //   swipe to the left
   function swipeLeft() {
+    let isNeedToSwipe = false;
     for (let i = 0; i < 16; i++) {
       if (i % 4 == 0) {
         let rowOne = squares[i].innerHTML;
@@ -61,50 +76,243 @@ document.addEventListener("DOMContentLoaded", () => {
           parseInt(rowThree),
           parseInt(rowFour),
         ];
-        let numInRow = row.filter((num) => num);
-        let missing = 4 - numInRow.length;
-        let addZeros = new Array(missing).fill(0);
-        let newRow = numInRow.concat(addZeros);
-        squares[i].innerHTML = newRow[0];
-        squares[i + 1].innerHTML = newRow[1];
-        squares[i + 2].innerHTML = newRow[2];
-        squares[i + 3].innerHTML = newRow[3];
+        for (let j = 1; j < 4; j++) {
+          if (row[j] !== 0 && row[j - 1] === 0) {
+            isNeedToSwipe = true;
+            let numInRow = row.filter((num) => num);
+            let missing = 4 - numInRow.length;
+            let addZeros = new Array(missing).fill(0);
+            let newRow = numInRow.concat(addZeros);
+            squares[i].innerHTML = newRow[0];
+            squares[i + 1].innerHTML = newRow[1];
+            squares[i + 2].innerHTML = newRow[2];
+            squares[i + 3].innerHTML = newRow[3];
+          }
+        }
       }
     }
+
+    return isNeedToSwipe;
   }
 
-  function addNum() {
+  // swipe to the up
+  function swipeUp() {
+    let isNeedToSwipe = false;
+    for (let i = 0; i < 4; i++) {
+      let columnOne = squares[i].innerHTML;
+      let columnTwo = squares[i + 4].innerHTML;
+      let columnThree = squares[i + 8].innerHTML;
+      let columnFour = squares[i + 12].innerHTML;
+      let column = [
+        parseInt(columnOne),
+        parseInt(columnTwo),
+        parseInt(columnThree),
+        parseInt(columnFour),
+      ];
+      for (let j = 1; j < 4; j++) {
+        if (column[j] !== 0 && column[j - 1] === 0) {
+          isNeedToSwipe = true;
+          let numInColumn = column.filter((num) => num);
+          let missing = 4 - numInColumn.length;
+          let addZero = new Array(missing).fill(0);
+          let newColumn = numInColumn.concat(addZero);
+          squares[i].innerHTML = newColumn[0];
+          squares[i + 4].innerHTML = newColumn[1];
+          squares[i + 8].innerHTML = newColumn[2];
+          squares[i + 12].innerHTML = newColumn[3];
+        }
+      }
+    }
+    return isNeedToSwipe;
+  }
+  //   swipe to the down
+  function swipeDown() {
+    let isNeedToSwipe = false;
+    for (let i = 0; i < 4; i++) {
+      let columnOne = squares[i].innerHTML;
+      let columnTwo = squares[i + 4].innerHTML;
+      let columnThree = squares[i + 8].innerHTML;
+      let columnFour = squares[i + 12].innerHTML;
+      let column = [
+        parseInt(columnOne),
+        parseInt(columnTwo),
+        parseInt(columnThree),
+        parseInt(columnFour),
+      ];
+      for (let j = 0; j < 3; j++) {
+        if (column[j] !== 0 && column[j + 1] === 0) {
+          isNeedToSwipe = true;
+          let numInColumn = column.filter((num) => num);
+          let missing = 4 - numInColumn.length;
+          let addZero = new Array(missing).fill(0);
+          let newColumn = addZero.concat(numInColumn);
+          squares[i].innerHTML = newColumn[0];
+          squares[i + 4].innerHTML = newColumn[1];
+          squares[i + 8].innerHTML = newColumn[2];
+          squares[i + 12].innerHTML = newColumn[3];
+        }
+      }
+    }
+    return isNeedToSwipe;
+  }
+  // add the num
+  function addRightRowNum() {
+    let isNeedToSwitch = true;
+    for (let i = 15; i > 0; i--) {
+      if (
+        squares[i].innerHTML != 0 &&
+        squares[i].innerHTML === squares[i - 1].innerHTML &&
+        i % 4 !== 0
+      ) {
+        isNeedToSwitch = false;
+        let total = parseInt(squares[i].innerHTML) * 2;
+        console.log(squares[i].innerHTML);
+        squares[i].innerHTML = total;
+        squares[i - 1].innerHTML = 0;
+      }
+    }
+    if (isNeedToSwitch) {
+      return false;
+    } else {
+      switchRight();
+      return true;
+    }
+  }
+  function addLeftRowNum() {
+    let isNeedToSwitch = true;
     for (let i = 0; i < 15; i++) {
-      if (squares[i].innerHTML === squares[i + 1].innerHTML) {
+      if (
+        squares[i].innerHTML != 0 &&
+        squares[i].innerHTML === squares[i + 1].innerHTML &&
+        (i + 1) % 4 !== 0
+      ) {
+        isNeedToSwitch = false;
         let total = parseInt(squares[i].innerHTML) * 2;
         squares[i].innerHTML = total;
         squares[i + 1].innerHTML = 0;
       }
     }
+    if (isNeedToSwitch) {
+      return false;
+    } else {
+      swipeLeft();
+      return true;
+    }
   }
+  function addColumnNumUp() {
+    let isNeedToSwitch = true;
+    for (let i = 0; i < 12; i++) {
+      if (
+        squares[i].innerHTML === squares[i + 4].innerHTML &&
+        squares[i].innerHTML != 0
+      ) {
+        isNeedToSwitch = false;
+        let total = parseInt(squares[i].innerHTML) * 2;
+        squares[i].innerHTML = total;
+        squares[i + 4].innerHTML = 0;
+      }
+    }
+    if (isNeedToSwitch) {
+      return false;
+    } else {
+      swipeUp();
+      return true;
+    }
+  }
+  function addColumnNumDown() {
+    let isNeedToSwitch = true;
+    for (let i = 15; i > 3; i--) {
+      if (
+        squares[i].innerHTML === squares[i - 4].innerHTML &&
+        squares[i].innerHTML != 0
+      ) {
+        isNeedToSwitch = false;
+        let total = parseInt(squares[i].innerHTML) * 2;
+        squares[i].innerHTML = total;
+        squares[i - 4].innerHTML = 0;
+      }
+    }
+    if (isNeedToSwitch) {
+      return false;
+    } else {
+      switchDown();
+      return true;
+    }
+  }
+
   //   assign keycodes
   function control(e) {
     if (e.keyCode === 39) {
       keyRight();
     } else if (e.keyCode === 37) {
       keyLeft();
+    } else if (e.keyCode === 38) {
+      keyUp();
+    } else if (e.keyCode === 40) {
+      keyDown();
     }
   }
   // to the right
   document.addEventListener("keyup", control);
   function keyRight() {
-    swipeRight();
-    addNum();
-    swipeRight();
-    generateNum();
-  }
-  // to the left
-  function keyLeft() {
-    swipeLeft();
-    addNum();
-    swipeLeft();
-    generateNum();
+    switchLeft = true;
+    switchDown = true;
+    switchUp = true;
+    if (switchRight) {
+      let ifSwiped = swipeRight();
+      let ifAdded = addRightRowNum();
+      if (ifSwiped || ifAdded) {
+        generateNum();
+      }
+      if (!ifAdded && !ifSwiped) {
+        switchRight = false;
+      }
+    }
   }
 
-  // swipeUp
+  function keyLeft() {
+    switchRight = true;
+    switchDown = true;
+    switchUp = true;
+    if (switchLeft) {
+      let ifSwiped = swipeLeft();
+      let ifAdded = addLeftRowNum();
+      if (ifAdded || ifSwiped) {
+        generateNum();
+      }
+      if (!ifAdded && !ifSwiped) {
+        switchLeft = false;
+      }
+    }
+  }
+  function keyUp() {
+    switchRight = true;
+    switchLeft = true;
+    switchDown = true;
+    if (switchUp) {
+      let ifSwiped = swipeUp();
+      let ifAdded = addColumnNumUp();
+      if (ifAdded || ifSwiped) {
+        generateNum();
+      }
+      if (!ifAdded && !ifSwiped) {
+        switchUp = false;
+      }
+    }
+  }
+  function keyDown() {
+    switchRight = true;
+    switchLeft = true;
+    switchUp = true;
+    if (switchDown) {
+      let ifSwiped = swipeDown();
+      let ifAdded = addColumnNumDown();
+      if (ifAdded || ifSwiped) {
+        generateNum();
+      }
+      if (!ifAdded && !ifSwiped) {
+        switchDown = false;
+      }
+    }
+  }
 });

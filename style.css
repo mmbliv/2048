@@ -12,3 +12,9 @@
   font-size: xx-large;
   border: 1px solid gray;
 }
+.result #win {
+  display: none;
+}
+.result #lost {
+  display: none;
+}

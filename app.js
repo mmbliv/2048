@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const scoreDisplay = document.getElementById("score");
+  const winDisplay = document.getElementById("win");
+  const lostDisplay = document.getElementById("lost");
   const gridDisplay = document.querySelector(".grid");
   // create a play border
   let squares = [];
@@ -6,7 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let switchLeft = true;
   let switchUp = true;
   let switchDown = true;
-  console.log(switchRight);
+  let score = 0;
+
   function createBorder() {
     for (let i = 0; i < 16; i++) {
       square = document.createElement("div");
@@ -26,7 +30,33 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[randomNum].innerHTML = 2;
     } else generateNum();
   }
-
+  //   restart the game
+  document.getElementById("reset").addEventListener("click", function () {
+    for (let i = 0; i < 16; i++) {
+      squares[i].innerHTML = 0;
+    }
+    score = 0;
+    scoreDisplay.innerHTML = score;
+    generateNum();
+    generateNum();
+  });
+  // check the result
+  function chectResult() {
+    let zeroNum = 0;
+    for (let i = 0; i < 16; i++) {
+      if (squares[i].innerHTML == 2048) {
+        winDisplay.style.display = "block";
+        document.removeEventListener("keyup", control);
+      }
+      if (squares[i].innerHTML == 0) {
+        zeroNum++;
+      }
+    }
+    if (zeroNum === 0) {
+      lostDisplay.style.display = "block";
+      document.removeEventListener("keyup", control);
+    }
+  }
   // swipe to the right
   function swipeRight() {
     let isNeedToSwipe = false;
@@ -57,7 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-    console.log(isNeedToSwipe + "aaaa");
+    if (isNeedToSwipe) {
+      score++;
+      scoreDisplay.innerHTML = score;
+    }
     return isNeedToSwipe;
   }
 
@@ -91,7 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-
+    if (isNeedToSwipe) {
+      score++;
+      scoreDisplay.innerHTML = score;
+    }
     return isNeedToSwipe;
   }
 
@@ -123,6 +159,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+    if (isNeedToSwipe) {
+      score++;
+      scoreDisplay.innerHTML = score;
+    }
     return isNeedToSwipe;
   }
   //   swipe to the down
@@ -153,6 +193,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+    if (isNeedToSwipe) {
+      score++;
+      scoreDisplay.innerHTML = score;
+    }
     return isNeedToSwipe;
   }
   // add the num
@@ -172,9 +216,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (isNeedToSwitch) {
+      chectResult();
       return false;
     } else {
-      switchRight();
+      swipeRight();
       return true;
     }
   }
@@ -193,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (isNeedToSwitch) {
+      chectResult();
       return false;
     } else {
       swipeLeft();
@@ -213,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (isNeedToSwitch) {
+      chectResult();
       return false;
     } else {
       swipeUp();
@@ -233,9 +280,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     if (isNeedToSwitch) {
+      chectResult();
       return false;
     } else {
-      switchDown();
+      swipeDown();
       return true;
     }
   }

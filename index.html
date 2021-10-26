@@ -5,36 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="app.js"></script>
     <title>2048</title>
+    <script src='./node_modules/file-saver/dist/FileSaver.js'></script>
 </head>
 <body>
-    <div class="show-board">
-        <div class="score">
-            <p id="score-title">score</p>
-            <span id="score">0</span>
+    <div class="container">
+        <div class="grid" >
         </div>
-        <div>
-            <p id="hightest-title">the hightest score</p>
-            <span id="hightest-score">700</span>
-
+        <div class="show-board">
+            <div class="score">
+                <p id="score-title">score</p>
+                <h3 id="score">0</h3>
+            </div>
+            <div class="best-score">
+                <p id="hightest-title">best score</p>
+                <h3 id="hightest-score">700</h3>          
+            </div>
+            <button id="reset">restart</button>       
         </div>
-        <button id="reset">restart</button>
-
-    </div>
-    <div class="grid" >
-        
-
     </div>
     <div class="result">
         <div id="win">
             <h1>you win</h1>
         </div>
         <div id="lost">
-            <h1>you lost</h1>
-
+            <h1>you lost</h1>    
         </div>
     </div>
-    
+    <script src="app.js"></script>
 </body>
 </html>

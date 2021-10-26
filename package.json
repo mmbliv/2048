@@ -1,5 +1,15 @@
 {
   "dependencies": {
     "file-saver": "^2.0.5"
-  }
+  },
+  "name": "2048",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

@@ -1,5 +1,6 @@
 * {
   margin: 0;
+  transition: all linear 1s;
 }
 
 .container {
@@ -54,10 +55,11 @@
   border: 1px solid gray;
 }
 .grid div div {
+  margin-top: 3px;
+  margin-left: 3px;
   width: 90px;
   height: 90px;
-  margin: 3px;
-  background-color: cadetblue;
+  background-color: rgb(114, 53, 101);
 }
 .result #win {
   display: none;

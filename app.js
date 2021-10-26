@@ -25,11 +25,41 @@ function createBorder() {
   }
   generateNum();
   generateNum();
+  generateColor();
 }
 createBorder();
+// generate color
+function generateColor() {
+  for (let i = 0; i < 16; i++) {
+    if (squares[i].innerHTML == 2048) {
+      squares[i].style.backgroundColor = "#063970";
+    } else if (squares[i].innerHTML == 1024) {
+      squares[i].style.backgroundColor = "#1e81b0";
+    } else if (squares[i].innerHTML == 512) {
+      squares[i].style.backgroundColor = "#e28743";
+    } else if (squares[i].innerHTML == 256) {
+      squares[i].style.backgroundColor = "#eab676";
+    } else if (squares[i].innerHTML == 128) {
+      squares[i].style.backgroundColor = "#abdbe3";
+    } else if (squares[i].innerHTML == 64) {
+      squares[i].style.backgroundColor = "#154c79";
+    } else if (squares[i].innerHTML == 32) {
+      squares[i].style.backgroundColor = "#873e23";
+    } else if (squares[i].innerHTML == 16) {
+      squares[i].style.backgroundColor = "#76b5c5";
+    } else if (squares[i].innerHTML == 8) {
+      squares[i].style.backgroundColor = "#1979a9";
+    } else if (squares[i].innerHTML == 4) {
+      squares[i].style.backgroundColor = "#717f5d";
+    } else if (squares[i].innerHTML == 2) {
+      squares[i].style.backgroundColor = "#cce7e8";
+    } else {
+      squares[i].style.backgroundColor = "#D2d7e2";
+    }
+  }
+}
 // generate a random num
 function generateNum() {
-  console.log("gen");
   let randomNum = Math.floor(Math.random() * 16);
   if (squares[randomNum].innerHTML == 0) {
     squares[randomNum].innerHTML = 2;
@@ -87,6 +117,12 @@ function swipeRight() {
       ];
       for (let j = 0; j < 3; j++) {
         if (row[j] !== 0 && row[j + 1] === 0) {
+          let rowWithSpace = row.slice(j + 1);
+          let countSpace = rowWithSpace.map((item) => {
+            item === 0;
+          });
+          squares[j + i].style.transform = `translateX(${countSpace.length}px)`;
+
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
@@ -104,6 +140,7 @@ function swipeRight() {
     score++;
     scoreDisplay.innerHTML = score;
   }
+
   return isNeedToSwipe;
 }
 
@@ -141,6 +178,7 @@ function swipeLeft() {
     score++;
     scoreDisplay.innerHTML = score;
   }
+
   return isNeedToSwipe;
 }
 
@@ -176,6 +214,7 @@ function swipeUp() {
     score++;
     scoreDisplay.innerHTML = score;
   }
+
   return isNeedToSwipe;
 }
 //   swipe to the down
@@ -210,6 +249,7 @@ function swipeDown() {
     score++;
     scoreDisplay.innerHTML = score;
   }
+
   return isNeedToSwipe;
 }
 // add the num
@@ -233,6 +273,7 @@ function addRightRowNum() {
     return false;
   } else {
     swipeRight();
+
     return true;
   }
 }
@@ -255,6 +296,7 @@ function addLeftRowNum() {
     return false;
   } else {
     swipeLeft();
+
     return true;
   }
 }
@@ -276,6 +318,7 @@ function addColumnNumUp() {
     return false;
   } else {
     swipeUp();
+
     return true;
   }
 }
@@ -297,6 +340,7 @@ function addColumnNumDown() {
     return false;
   } else {
     swipeDown();
+
     return true;
   }
 }
@@ -329,6 +373,7 @@ function keyRight() {
       switchRight = false;
     }
   }
+  generateColor();
 }
 
 function keyLeft() {
@@ -345,6 +390,7 @@ function keyLeft() {
       switchLeft = false;
     }
   }
+  generateColor();
 }
 function keyUp() {
   switchRight = true;
@@ -360,6 +406,7 @@ function keyUp() {
       switchUp = false;
     }
   }
+  generateColor();
 }
 function keyDown() {
   switchRight = true;
@@ -375,4 +422,5 @@ function keyDown() {
       switchDown = false;
     }
   }
+  generateColor();
 }

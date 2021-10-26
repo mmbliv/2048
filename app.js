@@ -7,6 +7,7 @@ bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
 
 // create a play border
 let squares = [];
+let squareSblings = [];
 let switchRight = true;
 let switchLeft = true;
 let switchUp = true;
@@ -16,12 +17,20 @@ let score = 0;
 function createBorder() {
   for (let i = 0; i < 16; i++) {
     let square;
+    let squareSbling;
+    let squareParent;
     squareParent = document.createElement("div");
+    squareParent.setAttribute("id", "grid-item");
     square = document.createElement("div");
     square.innerHTML = 0;
+    square.setAttribute("id", "num");
+    squareSbling = document.createElement("div");
+    squareSbling.setAttribute("id", "trans");
+    squareParent.appendChild(squareSbling);
     squareParent.appendChild(square);
     gridDisplay.appendChild(squareParent);
     squares.push(square);
+    squareSblings.push(squareSbling);
   }
   generateNum();
   generateNum();
@@ -69,9 +78,12 @@ function generateNum() {
 document.getElementById("reset").addEventListener("click", function () {
   for (let i = 0; i < 16; i++) {
     squares[i].innerHTML = 0;
+    squareSblings[i].style.transform = "translate(0,0)";
   }
   score = 0;
   scoreDisplay.innerHTML = score;
+  document.addEventListener("keyup", control);
+
   generateNum();
   generateNum();
 });
@@ -121,7 +133,8 @@ function swipeRight() {
           let countSpace = rowWithSpace.map((item) => {
             item === 0;
           });
-          squares[j + i].style.transform = `translateX(${countSpace.length}px)`;
+          console.log(countSpace.length);
+          squareSblings[j + i].style.transform = `translateX(100px)`;
 
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);

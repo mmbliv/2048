@@ -2,15 +2,16 @@
   margin: 0;
   transition: all linear 0.5s;
   box-sizing: border-box;
+  font-family: monospace;
 }
 
 .container {
   width: 620px;
   margin: 3rem auto;
-
   display: flex;
   height: 440px;
   box-sizing: border-box;
+  /* margin-left: 9.5rem; */
 }
 .show-board {
   width: 200px;
@@ -23,6 +24,8 @@
 }
 .score,
 .best-score {
+  font-weight: bolder;
+  color: rgb(50, 61, 58);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -31,15 +34,35 @@
   border: 1px solid lightsteelblue;
   background-color: lightsteelblue;
   width: 9rem;
-  height: 7rem;
+  height: 9rem;
   border-radius: 5%;
 }
 
 #reset {
+  background-color: #fff;
+  border: 0;
+  outline: 0;
+  padding: 1rem 1rem;
   font-size: x-large;
+  color: rgb(50, 61, 58);
+  font-weight: bolder;
+  box-shadow: 0px 5px 10px lightsteelblue;
+  transition: all 0.3s;
+  cursor: pointer;
+  border-radius: 5px;
+  border-bottom: 4px solid rgb(168, 185, 206);
+  background-color: lightsteelblue;
+  /* font-size: x-large;
   padding: 1rem;
   margin: 1rem;
   border-radius: 5%;
+  background-color: lightsteelblue;
+  border: none;
+  box-shadow: 2px 5px 3px 0px rgba(0, 0, 0, 0.5); */
+}
+#reset:hover {
+  box-shadow: 0px 15px 25px -5px #0057ab;
+  transform: scale(1.03);
 }
 
 .grid {
@@ -71,30 +94,41 @@
   background-color: #d2d7e2;
   width: 80px;
   height: 80px;
+  border-radius: 5%;
+  box-shadow: 2px 2px 2px 2px rgba(114, 108, 108, 0.5);
 
   /* border: 2px solid red; */
 }
 #num {
   width: 100%;
   height: 100%;
-  font-size: xx-large;
+  font-size: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* position: relative; */
-  /* border: 1px solid blue; */
-  /* text-align: center;
-  left: 50%;
-  width: 80px;
-  height: 80px;
-  margin-left: -40px;
-  margin-top: -40px;
-  top: 50%; */
 }
-/* #trans {
-  background-color: transparent;
-  border: 1px solid red;
+img {
+  width: 400px;
+  height: 420px;
+  position: absolute;
+  top: 3rem;
+  right: 10rem;
+}
+/* .play {
+  height: 60px;
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  margin-top: -30px;
+  left: 50%;
+  margin-left: -50px;
+  font-size: xx-large;
+  padding: 5px;
+  border-radius: 5%;
+  background-color: darkgoldenrod;
+  color: brown;
+  border: darkgoldenrod;
+  box-shadow: 2px 5px 3px 0px rgba(0, 0, 0, 0.5);
 } */
 
 .result #win {
@@ -103,6 +137,7 @@
 .result #lost {
   display: none;
 }
+/* move right */
 @keyframes moveright-1 {
   0% {
     transform: translateX(0);
@@ -145,6 +180,7 @@
     opacity: 0;
   }
 }
+/* move left */
 @keyframes moveleft-1 {
   0% {
     transform: translateX(0);
@@ -187,22 +223,93 @@
     opacity: 0;
   }
 }
-@keyframes moveup {
-  from {
+/* move up */
+@keyframes moveup-1 {
+  0% {
     transform: translateY(0);
+    opacity: 1;
   }
-  to {
+  99% {
     transform: translateY(-100px);
+    opacity: 0.7;
   }
-}
-@keyframes movedown {
-  from {
+  100% {
     transform: translateY(0);
-  }
-  to {
-    transform: translateY(100px);
+    opacity: 0;
   }
 }
+@keyframes moveup-2 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  99% {
+    transform: translateY(-200px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+@keyframes moveup-3 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  99% {
+    transform: translateY(-300px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+/* move down */
+@keyframes movedown-1 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  99% {
+    transform: translateY(100px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+@keyframes movedown-2 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  99% {
+    transform: translateY(200px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+@keyframes movedown-3 {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  99% {
+    transform: translateY(300px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+/* change color */
 @keyframes changecolor {
   from {
     background-color: "transparent";
@@ -211,6 +318,7 @@
     background-color: "#D2d7e2";
   }
 }
+/* change size */
 @keyframes changesize {
   0% {
     transform: scale(1);

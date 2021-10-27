@@ -3,6 +3,7 @@ const winDisplay = document.getElementById("win");
 const lostDisplay = document.getElementById("lost");
 const gridDisplay = document.querySelector(".grid");
 const bestScoreDisplay = document.getElementById("hightest-score");
+const containerDisplay = document.getElementById("main-container");
 bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
 
 // create a play border
@@ -74,18 +75,25 @@ function generateNum() {
   } else generateNum();
 }
 //   restart the game
-document.getElementById("reset").addEventListener("click", function () {
+function reStart() {
   for (let i = 0; i < 16; i++) {
     squares[i].innerHTML = "";
   }
   score = 0;
   scoreDisplay.innerHTML = score;
+  containerDisplay.style.marginLeft = "auto";
+  lostDisplay.style.display = "none";
+  winDisplay.style.display = "none";
+
   document.addEventListener("keyup", control);
 
   generateNum();
   generateNum();
   generateColor();
-});
+}
+document.getElementById("reset").addEventListener("click", reStart);
+// document.querySelectorAll(".play").addEventListener("click", reStart);
+
 // remove  annimation
 function removeAnnimation() {
   setInterval(() => {
@@ -100,6 +108,7 @@ function chectResult() {
   let zeroNum = 0;
   for (let i = 0; i < 16; i++) {
     if (squares[i].innerHTML == 2048) {
+      containerDisplay.style.marginLeft = "9.5rem";
       winDisplay.style.display = "block";
       document.removeEventListener("keyup", control);
       let bestScore = localStorage.getItem("bestScore");
@@ -116,6 +125,7 @@ function chectResult() {
     }
   }
   if (zeroNum === 0) {
+    containerDisplay.style.marginLeft = "9.5rem";
     lostDisplay.style.display = "block";
     document.removeEventListener("keyup", control);
   }
@@ -132,16 +142,13 @@ function swipeRight() {
       let row = [rowOne, rowTwo, rowThree, rowFour];
       for (let j = 0; j < 3; j++) {
         if (row[j] !== "" && row[j + 1] === "") {
+          //   add the swipe annimation
           let rowWithSpace = row.slice(j + 1);
-          console.log(rowWithSpace);
           let countSpace = rowWithSpace.filter((item) => !item);
-
-          console.log(row);
-          console.log(countSpace.length);
           squares[
             j + i
           ].style.animation = `moveright-${countSpace.length} 0.5s`;
-
+          //   re array the row
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
@@ -175,13 +182,11 @@ function swipeLeft() {
       let row = [rowOne, rowTwo, rowThree, rowFour];
       for (let j = 1; j < 4; j++) {
         if (row[j] !== "" && row[j - 1] === "") {
+          //   add the animation
           let rowWithSpace = row.slice(0, j);
-          console.log(rowWithSpace);
           let countSpace = rowWithSpace.filter((item) => !item);
-
-          console.log(row);
-          console.log(countSpace.length);
           squares[j + i].style.animation = `moveleft-${countSpace.length} 0.5s`;
+          // re array the row
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
@@ -211,18 +216,17 @@ function swipeUp() {
     let columnTwo = squares[i + 4].innerHTML;
     let columnThree = squares[i + 8].innerHTML;
     let columnFour = squares[i + 12].innerHTML;
-    let column = [
-      parseInt(columnOne),
-      parseInt(columnTwo),
-      parseInt(columnThree),
-      parseInt(columnFour),
-    ];
+    let column = [columnOne, columnTwo, columnThree, columnFour];
     for (let j = 1; j < 4; j++) {
-      if (column[j] !== 0 && column[j - 1] === 0) {
+      if (column[j] !== "" && column[j - 1] === "") {
+        let columnWithSpace = column.slice(0, j);
+        let countSpace = columnWithSpace.filter((item) => !item);
+        squares[j * 4 + i].style.animation = `moveup-${countSpace.length} 0.5s`;
+
         isNeedToSwipe = true;
         let numInColumn = column.filter((num) => num);
         let missing = 4 - numInColumn.length;
-        let addZero = new Array(missing).fill(0);
+        let addZero = new Array(missing).fill("");
         let newColumn = numInColumn.concat(addZero);
         squares[i].innerHTML = newColumn[0];
         squares[i + 4].innerHTML = newColumn[1];
@@ -246,18 +250,19 @@ function swipeDown() {
     let columnTwo = squares[i + 4].innerHTML;
     let columnThree = squares[i + 8].innerHTML;
     let columnFour = squares[i + 12].innerHTML;
-    let column = [
-      parseInt(columnOne),
-      parseInt(columnTwo),
-      parseInt(columnThree),
-      parseInt(columnFour),
-    ];
+    let column = [columnOne, columnTwo, columnThree, columnFour];
     for (let j = 0; j < 3; j++) {
-      if (column[j] !== 0 && column[j + 1] === 0) {
+      if (column[j] !== "" && column[j + 1] === "") {
+        let columnWithSpace = column.slice(j + 1);
+        let countSpace = columnWithSpace.filter((item) => !item);
+        squares[
+          j * 4 + i
+        ].style.animation = `movedown-${countSpace.length} 0.5s`;
+
         isNeedToSwipe = true;
         let numInColumn = column.filter((num) => num);
         let missing = 4 - numInColumn.length;
-        let addZero = new Array(missing).fill(0);
+        let addZero = new Array(missing).fill("");
         let newColumn = addZero.concat(numInColumn);
         squares[i].innerHTML = newColumn[0];
         squares[i + 4].innerHTML = newColumn[1];
@@ -309,6 +314,8 @@ function addLeftRowNum() {
       (i + 1) % 4 !== 0
     ) {
       isNeedToSwitch = false;
+      squares[i].style.animation = "changesize 0.5s";
+      squares[i + 1].style.animation = "moveleft-1 0.5s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i + 1].innerHTML = "";
@@ -328,12 +335,14 @@ function addColumnNumUp() {
   for (let i = 0; i < 12; i++) {
     if (
       squares[i].innerHTML === squares[i + 4].innerHTML &&
-      squares[i].innerHTML != 0
+      squares[i].innerHTML !== ""
     ) {
       isNeedToSwitch = false;
+      squares[i].style.animation = "changesize 0.5s";
+      squares[i + 4].style.animation = "moveup-1 0.5s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
-      squares[i + 4].innerHTML = 0;
+      squares[i + 4].innerHTML = "";
     }
   }
   if (isNeedToSwitch) {
@@ -350,12 +359,14 @@ function addColumnNumDown() {
   for (let i = 15; i > 3; i--) {
     if (
       squares[i].innerHTML === squares[i - 4].innerHTML &&
-      squares[i].innerHTML != 0
+      squares[i].innerHTML !== ""
     ) {
       isNeedToSwitch = false;
+      squares[i].style.animation = "changesize 0.5s";
+      squares[i - 4].style.animation = "movedown-1 0.5s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
-      squares[i - 4].innerHTML = 0;
+      squares[i - 4].innerHTML = "";
     }
   }
   if (isNeedToSwitch) {

@@ -7,7 +7,7 @@ bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
 
 // create a play border
 let squares = [];
-let squareSblings = [];
+let squareParents = [];
 let switchRight = true;
 let switchLeft = true;
 let switchUp = true;
@@ -17,53 +17,61 @@ let score = 0;
 function createBorder() {
   for (let i = 0; i < 16; i++) {
     let square;
-    let squareSbling;
     let squareParent;
     squareParent = document.createElement("div");
     squareParent.setAttribute("id", "grid-item");
     square = document.createElement("div");
-    square.innerHTML = 0;
+    // square.innerHTML = 0;
     square.setAttribute("id", "num");
-    squareSbling = document.createElement("div");
-    squareSbling.setAttribute("id", "trans");
-    squareParent.appendChild(squareSbling);
     squareParent.appendChild(square);
     gridDisplay.appendChild(squareParent);
     squares.push(square);
-    squareSblings.push(squareSbling);
+    squareParents.push(squareParent);
   }
   generateNum();
   generateNum();
   generateColor();
 }
 createBorder();
+
 // generate color
 function generateColor() {
   for (let i = 0; i < 16; i++) {
     if (squares[i].innerHTML == 2048) {
       squares[i].style.backgroundColor = "#063970";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 1024) {
       squares[i].style.backgroundColor = "#1e81b0";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 512) {
       squares[i].style.backgroundColor = "#e28743";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 256) {
-      squares[i].style.backgroundColor = "#eab676";
+      squares[i].style.backgroundColor = "#825f7a";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 128) {
-      squares[i].style.backgroundColor = "#abdbe3";
+      squares[i].style.backgroundColor = "#ab8724";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 64) {
       squares[i].style.backgroundColor = "#154c79";
     } else if (squares[i].innerHTML == 32) {
       squares[i].style.backgroundColor = "#873e23";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 16) {
       squares[i].style.backgroundColor = "#76b5c5";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 8) {
       squares[i].style.backgroundColor = "#1979a9";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 4) {
       squares[i].style.backgroundColor = "#717f5d";
+      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 2) {
       squares[i].style.backgroundColor = "#cce7e8";
+      squares[i].style.color = "black";
     } else {
       squares[i].style.backgroundColor = "#D2d7e2";
+      squares[i].style.color = "transparent";
     }
   }
 }
@@ -78,7 +86,6 @@ function generateNum() {
 document.getElementById("reset").addEventListener("click", function () {
   for (let i = 0; i < 16; i++) {
     squares[i].innerHTML = 0;
-    squareSblings[i].style.transform = "translate(0,0)";
   }
   score = 0;
   scoreDisplay.innerHTML = score;
@@ -86,7 +93,17 @@ document.getElementById("reset").addEventListener("click", function () {
 
   generateNum();
   generateNum();
+  generateColor();
 });
+// remove  annimation
+function removeAnnimation() {
+  setInterval(() => {
+    for (let i = 0; i < 16; i++) {
+      squares[i].style.animation = "";
+    }
+  }, 2000);
+}
+removeAnnimation();
 // check the result
 function chectResult() {
   let zeroNum = 0;
@@ -133,8 +150,9 @@ function swipeRight() {
           let countSpace = rowWithSpace.map((item) => {
             item === 0;
           });
-          console.log(countSpace.length);
-          squareSblings[j + i].style.transform = `translateX(100px)`;
+          squares[
+            j + i
+          ].style.animation = `moveright-${countSpace.length} 0.5s`;
 
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
@@ -174,6 +192,14 @@ function swipeLeft() {
       ];
       for (let j = 1; j < 4; j++) {
         if (row[j] !== 0 && row[j - 1] === 0) {
+          //   let rowWithSpace = row.slice(0, j);
+          //   let countSpace = rowWithSpace.map((item) => {
+          //     item === 0;
+          //   });
+          //   console.log(`translateX(-${countSpace.length * 100}px)`);
+          //   squares[j + i].style.transform = `translateX(-${
+          //     countSpace.length * 100
+          //   }px)`;
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
@@ -265,6 +291,7 @@ function swipeDown() {
 
   return isNeedToSwipe;
 }
+
 // add the num
 function addRightRowNum() {
   let isNeedToSwitch = true;
@@ -275,8 +302,9 @@ function addRightRowNum() {
       i % 4 !== 0
     ) {
       isNeedToSwitch = false;
+      squares[i].style.animation = "changesize 0.5s";
+      squares[i - 1].style.animation = "moveright-1 0.5s";
       let total = parseInt(squares[i].innerHTML) * 2;
-      console.log(squares[i].innerHTML);
       squares[i].innerHTML = total;
       squares[i - 1].innerHTML = 0;
     }
@@ -386,6 +414,7 @@ function keyRight() {
       switchRight = false;
     }
   }
+
   generateColor();
 }
 
@@ -403,6 +432,7 @@ function keyLeft() {
       switchLeft = false;
     }
   }
+
   generateColor();
 }
 function keyUp() {
@@ -419,6 +449,7 @@ function keyUp() {
       switchUp = false;
     }
   }
+
   generateColor();
 }
 function keyDown() {
@@ -435,5 +466,6 @@ function keyDown() {
       switchDown = false;
     }
   }
+
   generateColor();
 }

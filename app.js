@@ -174,19 +174,18 @@ function swipeLeft() {
       let rowFour = squares[i + 3].innerHTML;
       let row = [rowOne, rowTwo, rowThree, rowFour];
       for (let j = 1; j < 4; j++) {
-        if (row[j] !== 0 && row[j - 1] === 0) {
-          //   let rowWithSpace = row.slice(0, j);
-          //   let countSpace = rowWithSpace.map((item) => {
-          //     item === 0;
-          //   });
-          //   console.log(`translateX(-${countSpace.length * 100}px)`);
-          //   squares[j + i].style.transform = `translateX(-${
-          //     countSpace.length * 100
-          //   }px)`;
+        if (row[j] !== "" && row[j - 1] === "") {
+          let rowWithSpace = row.slice(0, j);
+          console.log(rowWithSpace);
+          let countSpace = rowWithSpace.filter((item) => !item);
+
+          console.log(row);
+          console.log(countSpace.length);
+          squares[j + i].style.animation = `moveleft-${countSpace.length} 0.5s`;
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
-          let addZeros = new Array(missing).fill(0);
+          let addZeros = new Array(missing).fill("");
           let newRow = numInRow.concat(addZeros);
           squares[i].innerHTML = newRow[0];
           squares[i + 1].innerHTML = newRow[1];
@@ -305,14 +304,14 @@ function addLeftRowNum() {
   let isNeedToSwitch = true;
   for (let i = 0; i < 15; i++) {
     if (
-      squares[i].innerHTML != 0 &&
+      squares[i].innerHTML != "" &&
       squares[i].innerHTML === squares[i + 1].innerHTML &&
       (i + 1) % 4 !== 0
     ) {
       isNeedToSwitch = false;
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
-      squares[i + 1].innerHTML = 0;
+      squares[i + 1].innerHTML = "";
     }
   }
   if (isNeedToSwitch) {

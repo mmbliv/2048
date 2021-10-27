@@ -28,6 +28,7 @@ function createBorder() {
     squares.push(square);
     squareParents.push(squareParent);
   }
+
   generateNum();
   generateNum();
   generateColor();
@@ -39,53 +40,43 @@ function generateColor() {
   for (let i = 0; i < 16; i++) {
     if (squares[i].innerHTML == 2048) {
       squares[i].style.backgroundColor = "#063970";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 1024) {
       squares[i].style.backgroundColor = "#1e81b0";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 512) {
       squares[i].style.backgroundColor = "#e28743";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 256) {
       squares[i].style.backgroundColor = "#825f7a";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 128) {
       squares[i].style.backgroundColor = "#ab8724";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 64) {
       squares[i].style.backgroundColor = "#154c79";
     } else if (squares[i].innerHTML == 32) {
       squares[i].style.backgroundColor = "#873e23";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 16) {
       squares[i].style.backgroundColor = "#76b5c5";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 8) {
       squares[i].style.backgroundColor = "#1979a9";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 4) {
       squares[i].style.backgroundColor = "#717f5d";
-      squares[i].style.color = "black";
     } else if (squares[i].innerHTML == 2) {
       squares[i].style.backgroundColor = "#cce7e8";
-      squares[i].style.color = "black";
     } else {
       squares[i].style.backgroundColor = "#D2d7e2";
-      squares[i].style.color = "transparent";
+      //   squares[i].style.color = "transparent";
     }
   }
 }
 // generate a random num
 function generateNum() {
   let randomNum = Math.floor(Math.random() * 16);
-  if (squares[randomNum].innerHTML == 0) {
+  if (squares[randomNum].innerHTML === "") {
     squares[randomNum].innerHTML = 2;
   } else generateNum();
 }
 //   restart the game
 document.getElementById("reset").addEventListener("click", function () {
   for (let i = 0; i < 16; i++) {
-    squares[i].innerHTML = 0;
+    squares[i].innerHTML = "";
   }
   score = 0;
   scoreDisplay.innerHTML = score;
@@ -120,7 +111,7 @@ function chectResult() {
         }
       }
     }
-    if (squares[i].innerHTML == 0) {
+    if (squares[i].innerHTML === "") {
       zeroNum++;
     }
   }
@@ -138,18 +129,15 @@ function swipeRight() {
       let rowTwo = squares[i + 1].innerHTML;
       let rowThree = squares[i + 2].innerHTML;
       let rowFour = squares[i + 3].innerHTML;
-      let row = [
-        parseInt(rowOne),
-        parseInt(rowTwo),
-        parseInt(rowThree),
-        parseInt(rowFour),
-      ];
+      let row = [rowOne, rowTwo, rowThree, rowFour];
       for (let j = 0; j < 3; j++) {
-        if (row[j] !== 0 && row[j + 1] === 0) {
+        if (row[j] !== "" && row[j + 1] === "") {
           let rowWithSpace = row.slice(j + 1);
-          let countSpace = rowWithSpace.map((item) => {
-            item === 0;
-          });
+          console.log(rowWithSpace);
+          let countSpace = rowWithSpace.filter((item) => !item);
+
+          console.log(row);
+          console.log(countSpace.length);
           squares[
             j + i
           ].style.animation = `moveright-${countSpace.length} 0.5s`;
@@ -157,7 +145,7 @@ function swipeRight() {
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
           let missing = 4 - numInRow.length;
-          let addZeros = new Array(missing).fill(0);
+          let addZeros = new Array(missing).fill("");
           let newRow = addZeros.concat(numInRow);
           squares[i].innerHTML = newRow[0];
           squares[i + 1].innerHTML = newRow[1];
@@ -184,12 +172,7 @@ function swipeLeft() {
       let rowTwo = squares[i + 1].innerHTML;
       let rowThree = squares[i + 2].innerHTML;
       let rowFour = squares[i + 3].innerHTML;
-      let row = [
-        parseInt(rowOne),
-        parseInt(rowTwo),
-        parseInt(rowThree),
-        parseInt(rowFour),
-      ];
+      let row = [rowOne, rowTwo, rowThree, rowFour];
       for (let j = 1; j < 4; j++) {
         if (row[j] !== 0 && row[j - 1] === 0) {
           //   let rowWithSpace = row.slice(0, j);
@@ -297,7 +280,7 @@ function addRightRowNum() {
   let isNeedToSwitch = true;
   for (let i = 15; i > 0; i--) {
     if (
-      squares[i].innerHTML != 0 &&
+      squares[i].innerHTML != "" &&
       squares[i].innerHTML === squares[i - 1].innerHTML &&
       i % 4 !== 0
     ) {
@@ -306,7 +289,7 @@ function addRightRowNum() {
       squares[i - 1].style.animation = "moveright-1 0.5s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
-      squares[i - 1].innerHTML = 0;
+      squares[i - 1].innerHTML = "";
     }
   }
   if (isNeedToSwitch) {
@@ -401,6 +384,7 @@ function control(e) {
 // to the right
 document.addEventListener("keyup", control);
 function keyRight() {
+  console.log("keyright");
   switchLeft = true;
   switchDown = true;
   switchUp = true;

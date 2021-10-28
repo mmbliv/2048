@@ -107,6 +107,16 @@ removeAnnimation();
 function chectResult() {
   let zeroNum = 0;
   for (let i = 0; i < 16; i++) {
+    if (
+      i < 15 &&
+      squares[i].innerHTML === squares[i + 1].innerHTML &&
+      (i + 1) % 4 != 0
+    ) {
+      return;
+    }
+    if (i < 11 && squares[i].innerHTML === squares[i + 4].innerHTML) {
+      return;
+    }
     if (squares[i].innerHTML == 2048) {
       containerDisplay.style.marginLeft = "9.5rem";
       winDisplay.style.display = "block";
@@ -147,7 +157,7 @@ function swipeRight() {
           let countSpace = rowWithSpace.filter((item) => !item);
           squares[
             j + i
-          ].style.animation = `moveright-${countSpace.length} 0.5s`;
+          ].style.animation = `moveright-${countSpace.length} 0.2s`;
           //   re array the row
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
@@ -161,10 +171,6 @@ function swipeRight() {
         }
       }
     }
-  }
-  if (isNeedToSwipe) {
-    score++;
-    scoreDisplay.innerHTML = score;
   }
 
   return isNeedToSwipe;
@@ -185,7 +191,7 @@ function swipeLeft() {
           //   add the animation
           let rowWithSpace = row.slice(0, j);
           let countSpace = rowWithSpace.filter((item) => !item);
-          squares[j + i].style.animation = `moveleft-${countSpace.length} 0.5s`;
+          squares[j + i].style.animation = `moveleft-${countSpace.length} 0.2s`;
           // re array the row
           isNeedToSwipe = true;
           let numInRow = row.filter((num) => num);
@@ -199,10 +205,6 @@ function swipeLeft() {
         }
       }
     }
-  }
-  if (isNeedToSwipe) {
-    score++;
-    scoreDisplay.innerHTML = score;
   }
 
   return isNeedToSwipe;
@@ -221,7 +223,7 @@ function swipeUp() {
       if (column[j] !== "" && column[j - 1] === "") {
         let columnWithSpace = column.slice(0, j);
         let countSpace = columnWithSpace.filter((item) => !item);
-        squares[j * 4 + i].style.animation = `moveup-${countSpace.length} 0.5s`;
+        squares[j * 4 + i].style.animation = `moveup-${countSpace.length} 0.2s`;
 
         isNeedToSwipe = true;
         let numInColumn = column.filter((num) => num);
@@ -234,10 +236,6 @@ function swipeUp() {
         squares[i + 12].innerHTML = newColumn[3];
       }
     }
-  }
-  if (isNeedToSwipe) {
-    score++;
-    scoreDisplay.innerHTML = score;
   }
 
   return isNeedToSwipe;
@@ -257,7 +255,7 @@ function swipeDown() {
         let countSpace = columnWithSpace.filter((item) => !item);
         squares[
           j * 4 + i
-        ].style.animation = `movedown-${countSpace.length} 0.5s`;
+        ].style.animation = `movedown-${countSpace.length} 0.2s`;
 
         isNeedToSwipe = true;
         let numInColumn = column.filter((num) => num);
@@ -271,10 +269,6 @@ function swipeDown() {
       }
     }
   }
-  if (isNeedToSwipe) {
-    score++;
-    scoreDisplay.innerHTML = score;
-  }
 
   return isNeedToSwipe;
 }
@@ -284,13 +278,13 @@ function addRightRowNum() {
   let isNeedToSwitch = true;
   for (let i = 15; i > 0; i--) {
     if (
-      squares[i].innerHTML != "" &&
+      squares[i].innerHTML !== "" &&
       squares[i].innerHTML === squares[i - 1].innerHTML &&
       i % 4 !== 0
     ) {
       isNeedToSwitch = false;
       squares[i].style.animation = "changesize 0.5s";
-      squares[i - 1].style.animation = "moveright-1 0.5s";
+      squares[i - 1].style.animation = "moveright-1 0.2s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i - 1].innerHTML = "";
@@ -301,7 +295,6 @@ function addRightRowNum() {
     return false;
   } else {
     swipeRight();
-
     return true;
   }
 }
@@ -315,7 +308,7 @@ function addLeftRowNum() {
     ) {
       isNeedToSwitch = false;
       squares[i].style.animation = "changesize 0.5s";
-      squares[i + 1].style.animation = "moveleft-1 0.5s";
+      squares[i + 1].style.animation = "moveleft-1 0.2s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i + 1].innerHTML = "";
@@ -326,7 +319,6 @@ function addLeftRowNum() {
     return false;
   } else {
     swipeLeft();
-
     return true;
   }
 }
@@ -339,7 +331,7 @@ function addColumnNumUp() {
     ) {
       isNeedToSwitch = false;
       squares[i].style.animation = "changesize 0.5s";
-      squares[i + 4].style.animation = "moveup-1 0.5s";
+      squares[i + 4].style.animation = "moveup-1 0.2s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i + 4].innerHTML = "";
@@ -350,7 +342,6 @@ function addColumnNumUp() {
     return false;
   } else {
     swipeUp();
-
     return true;
   }
 }
@@ -363,7 +354,7 @@ function addColumnNumDown() {
     ) {
       isNeedToSwitch = false;
       squares[i].style.animation = "changesize 0.5s";
-      squares[i - 4].style.animation = "movedown-1 0.5s";
+      squares[i - 4].style.animation = "movedown-1 0.2s";
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i - 4].innerHTML = "";
@@ -374,7 +365,6 @@ function addColumnNumDown() {
     return false;
   } else {
     swipeDown();
-
     return true;
   }
 }
@@ -403,6 +393,8 @@ function keyRight() {
     let ifAdded = addRightRowNum();
     if (ifSwiped || ifAdded) {
       generateNum();
+      score++;
+      scoreDisplay.innerHTML = score;
     }
     if (!ifAdded && !ifSwiped) {
       switchRight = false;
@@ -420,6 +412,8 @@ function keyLeft() {
     let ifSwiped = swipeLeft();
     let ifAdded = addLeftRowNum();
     if (ifAdded || ifSwiped) {
+      score++;
+      scoreDisplay.innerHTML = score;
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {
@@ -437,6 +431,8 @@ function keyUp() {
     let ifSwiped = swipeUp();
     let ifAdded = addColumnNumUp();
     if (ifAdded || ifSwiped) {
+      score++;
+      scoreDisplay.innerHTML = score;
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {
@@ -454,6 +450,8 @@ function keyDown() {
     let ifSwiped = swipeDown();
     let ifAdded = addColumnNumDown();
     if (ifAdded || ifSwiped) {
+      score++;
+      scoreDisplay.innerHTML = score;
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {

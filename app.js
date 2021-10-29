@@ -3,8 +3,10 @@ const winDisplay = document.getElementById("win");
 const lostDisplay = document.getElementById("lost");
 const gridDisplay = document.querySelector(".grid");
 const bestScoreDisplay = document.getElementById("hightest-score");
+const worstScoreDisplay = document.getElementById("worst-score");
 const containerDisplay = document.getElementById("main-container");
 bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
+worstScoreDisplay.innerHTML = localStorage.getItem("worstScore");
 
 // create a play border
 let squares = [];
@@ -171,6 +173,16 @@ function checkForLose() {
     containerDisplay.style.marginLeft = "9.5rem";
     lostDisplay.style.display = "block";
     document.removeEventListener("keyup", control);
+    let worstScore = localStorage.getItem("worstScore");
+    console.log(score);
+    if (!worstScore) {
+      localStorage.setItem("worstScore", score);
+    } else {
+      if (score < worstScore) {
+        localStorage.setItem("worstScore", score);
+        worstScoreDisplay.innerHTML = localStorage.getItem("worstScore");
+      }
+    }
   }
 }
 function checkForWin() {

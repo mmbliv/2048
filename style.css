@@ -22,8 +22,7 @@
   justify-content: space-evenly;
   background-color: burlywood;
 }
-.score,
-.best-score {
+.score {
   font-weight: bolder;
   color: rgb(50, 61, 58);
   display: flex;
@@ -34,7 +33,7 @@
   border: 1px solid lightsteelblue;
   background-color: lightsteelblue;
   width: 9rem;
-  height: 9rem;
+  height: 5rem;
   border-radius: 5%;
 }
 

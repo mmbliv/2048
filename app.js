@@ -8,12 +8,55 @@ bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
 
 // create a play border
 let squares = [];
-let squareParents = [];
 let switchRight = true;
 let switchLeft = true;
 let switchUp = true;
 let switchDown = true;
 let score = 0;
+
+function rotateSquare() {
+  let firstIndex = 0;
+
+  firstIndex = 3;
+
+  let values = [];
+  for (let i = 0; i < 16; i++) {
+    values[i] = squares[i].innerHTML;
+  }
+
+  for (let i = 0; i < 4; i++, firstIndex += 4) {
+    squares[i].innerHTML = values[firstIndex];
+    squares[i + 4].innerHTML = values[firstIndex - 1];
+    squares[i + 8].innerHTML = values[firstIndex - 2];
+    squares[i + 12].innerHTML = values[firstIndex - 3];
+  }
+}
+
+function resetSquare() {
+  let firstIndex = 0;
+
+  firstIndex = 3;
+  let values = [];
+  for (let i = 0; i < 16; i++) {
+    values[i] = squares[i].innerHTML;
+  }
+  for (let i = 0; i < 4; i++, firstIndex += 4) {
+    squares[firstIndex].innerHTML = values[i];
+    squares[firstIndex - 1].innerHTML = values[i + 4];
+    squares[firstIndex - 2].innerHTML = values[i + 8];
+    squares[firstIndex - 3].innerHTML = values[i + 12];
+  }
+}
+function rotateSquare2(arrayNeedToBeRotate) {
+  let temperaryArray = [...arrayNeedToBeRotate];
+  for (let i = 0, firstIndex = 3; i < 4; i++, firstIndex += 4) {
+    arrayNeedToBeRotate[firstIndex] = temperaryArray[i];
+    arrayNeedToBeRotate[firstIndex - 1] = temperaryArray[i + 4];
+    arrayNeedToBeRotate[firstIndex - 2] = temperaryArray[i + 8];
+    arrayNeedToBeRotate[firstIndex - 3] = temperaryArray[i + 12];
+  }
+  return arrayNeedToBeRotate;
+}
 
 function createBorder() {
   for (let i = 0; i < 16; i++) {
@@ -75,7 +118,8 @@ function generateNum() {
   } else generateNum();
 }
 //   restart the game
-function reStart() {
+
+document.getElementById("reset").addEventListener("click", function reStart() {
   for (let i = 0; i < 16; i++) {
     squares[i].innerHTML = "";
   }
@@ -84,14 +128,17 @@ function reStart() {
   containerDisplay.style.marginLeft = "auto";
   lostDisplay.style.display = "none";
   winDisplay.style.display = "none";
+  switchRight = true;
+  switchLeft = true;
+  switchUp = true;
+  switchDown = true;
 
   document.addEventListener("keyup", control);
 
   generateNum();
   generateNum();
   generateColor();
-}
-document.getElementById("reset").addEventListener("click", reStart);
+});
 // document.querySelectorAll(".play").addEventListener("click", reStart);
 
 // remove  annimation
@@ -140,90 +187,25 @@ function chectResult() {
     document.removeEventListener("keyup", control);
   }
 }
-// swipe to the right
-function swipeRight() {
+
+function swipe() {
   let isNeedToSwipe = false;
-  for (let i = 0; i < 16; i++) {
-    if (i % 4 == 0) {
-      let rowOne = squares[i].innerHTML;
-      let rowTwo = squares[i + 1].innerHTML;
-      let rowThree = squares[i + 2].innerHTML;
-      let rowFour = squares[i + 3].innerHTML;
-      let row = [rowOne, rowTwo, rowThree, rowFour];
-      for (let j = 0; j < 3; j++) {
-        if (row[j] !== "" && row[j + 1] === "") {
-          //   add the swipe annimation
-          let rowWithSpace = row.slice(j + 1);
-          let countSpace = rowWithSpace.filter((item) => !item);
-          squares[
-            j + i
-          ].style.animation = `moveright-${countSpace.length} 0.2s`;
-          //   re array the row
-          isNeedToSwipe = true;
-          let numInRow = row.filter((num) => num);
-          let missing = 4 - numInRow.length;
-          let addZeros = new Array(missing).fill("");
-          let newRow = addZeros.concat(numInRow);
-          squares[i].innerHTML = newRow[0];
-          squares[i + 1].innerHTML = newRow[1];
-          squares[i + 2].innerHTML = newRow[2];
-          squares[i + 3].innerHTML = newRow[3];
-        }
-      }
-    }
-  }
-
-  return isNeedToSwipe;
-}
-
-//   swipe to the left
-function swipeLeft() {
-  let isNeedToSwipe = false;
-  for (let i = 0; i < 16; i++) {
-    if (i % 4 == 0) {
-      let rowOne = squares[i].innerHTML;
-      let rowTwo = squares[i + 1].innerHTML;
-      let rowThree = squares[i + 2].innerHTML;
-      let rowFour = squares[i + 3].innerHTML;
-      let row = [rowOne, rowTwo, rowThree, rowFour];
-      for (let j = 1; j < 4; j++) {
-        if (row[j] !== "" && row[j - 1] === "") {
-          //   add the animation
-          let rowWithSpace = row.slice(0, j);
-          let countSpace = rowWithSpace.filter((item) => !item);
-          squares[j + i].style.animation = `moveleft-${countSpace.length} 0.2s`;
-          // re array the row
-          isNeedToSwipe = true;
-          let numInRow = row.filter((num) => num);
-          let missing = 4 - numInRow.length;
-          let addZeros = new Array(missing).fill("");
-          let newRow = numInRow.concat(addZeros);
-          squares[i].innerHTML = newRow[0];
-          squares[i + 1].innerHTML = newRow[1];
-          squares[i + 2].innerHTML = newRow[2];
-          squares[i + 3].innerHTML = newRow[3];
-        }
-      }
-    }
-  }
-
-  return isNeedToSwipe;
-}
-
-// swipe to the up
-function swipeUp() {
-  let isNeedToSwipe = false;
+  let slideCount = [];
   for (let i = 0; i < 4; i++) {
     let columnOne = squares[i].innerHTML;
     let columnTwo = squares[i + 4].innerHTML;
     let columnThree = squares[i + 8].innerHTML;
     let columnFour = squares[i + 12].innerHTML;
     let column = [columnOne, columnTwo, columnThree, columnFour];
+
     for (let j = 1; j < 4; j++) {
       if (column[j] !== "" && column[j - 1] === "") {
         let columnWithSpace = column.slice(0, j);
         let countSpace = columnWithSpace.filter((item) => !item);
-        squares[j * 4 + i].style.animation = `moveup-${countSpace.length} 0.2s`;
+        slideCount.push(countSpace.length);
+        // squares[
+        //   j * 4 + i
+        // ].style.animation = `move${direction}-${countSpace.length} 0.2s`;
 
         isNeedToSwipe = true;
         let numInColumn = column.filter((num) => num);
@@ -234,138 +216,106 @@ function swipeUp() {
         squares[i + 4].innerHTML = newColumn[1];
         squares[i + 8].innerHTML = newColumn[2];
         squares[i + 12].innerHTML = newColumn[3];
+      } else {
+        slideCount.push(0);
       }
     }
   }
 
-  return isNeedToSwipe;
-}
-//   swipe to the down
-function swipeDown() {
-  let isNeedToSwipe = false;
-  for (let i = 0; i < 4; i++) {
-    let columnOne = squares[i].innerHTML;
-    let columnTwo = squares[i + 4].innerHTML;
-    let columnThree = squares[i + 8].innerHTML;
-    let columnFour = squares[i + 12].innerHTML;
-    let column = [columnOne, columnTwo, columnThree, columnFour];
-    for (let j = 0; j < 3; j++) {
-      if (column[j] !== "" && column[j + 1] === "") {
-        let columnWithSpace = column.slice(j + 1);
-        let countSpace = columnWithSpace.filter((item) => !item);
-        squares[
-          j * 4 + i
-        ].style.animation = `movedown-${countSpace.length} 0.2s`;
-
-        isNeedToSwipe = true;
-        let numInColumn = column.filter((num) => num);
-        let missing = 4 - numInColumn.length;
-        let addZero = new Array(missing).fill("");
-        let newColumn = addZero.concat(numInColumn);
-        squares[i].innerHTML = newColumn[0];
-        squares[i + 4].innerHTML = newColumn[1];
-        squares[i + 8].innerHTML = newColumn[2];
-        squares[i + 12].innerHTML = newColumn[3];
-      }
-    }
-  }
-
-  return isNeedToSwipe;
+  return { ifSwiped: isNeedToSwipe, slideCount };
 }
 
-// add the num
-function addRightRowNum() {
+function add() {
   let isNeedToSwitch = true;
-  for (let i = 15; i > 0; i--) {
-    if (
-      squares[i].innerHTML !== "" &&
-      squares[i].innerHTML === squares[i - 1].innerHTML &&
-      i % 4 !== 0
-    ) {
-      isNeedToSwitch = false;
-      squares[i].style.animation = "changesize 0.5s";
-      squares[i - 1].style.animation = "moveright-1 0.2s";
-      let total = parseInt(squares[i].innerHTML) * 2;
-      squares[i].innerHTML = total;
-      squares[i - 1].innerHTML = "";
-    }
-  }
-  if (isNeedToSwitch) {
-    chectResult();
-    return false;
-  } else {
-    swipeRight();
-    return true;
-  }
-}
-function addLeftRowNum() {
-  let isNeedToSwitch = true;
-  for (let i = 0; i < 15; i++) {
-    if (
-      squares[i].innerHTML != "" &&
-      squares[i].innerHTML === squares[i + 1].innerHTML &&
-      (i + 1) % 4 !== 0
-    ) {
-      isNeedToSwitch = false;
-      squares[i].style.animation = "changesize 0.5s";
-      squares[i + 1].style.animation = "moveleft-1 0.2s";
-      let total = parseInt(squares[i].innerHTML) * 2;
-      squares[i].innerHTML = total;
-      squares[i + 1].innerHTML = "";
-    }
-  }
-  if (isNeedToSwitch) {
-    chectResult();
-    return false;
-  } else {
-    swipeLeft();
-    return true;
-  }
-}
-function addColumnNumUp() {
-  let isNeedToSwitch = true;
+  let animationChange = {};
+
   for (let i = 0; i < 12; i++) {
     if (
       squares[i].innerHTML === squares[i + 4].innerHTML &&
       squares[i].innerHTML !== ""
     ) {
       isNeedToSwitch = false;
-      squares[i].style.animation = "changesize 0.5s";
-      squares[i + 4].style.animation = "moveup-1 0.2s";
+      //   squares[i].style.animation = "changesize 0.5s";
+      //   squares[i + 4].style.animation = `move${direction}-1 0.2s`;
       let total = parseInt(squares[i].innerHTML) * 2;
       squares[i].innerHTML = total;
       squares[i + 4].innerHTML = "";
+      //   1 represent size change, 2 represent position change
+      animationChange[i] = 1;
+      animationChange[i + 4] = 2;
     }
   }
+
   if (isNeedToSwitch) {
     chectResult();
-    return false;
+    return { ifAdded: false, animationChange };
   } else {
-    swipeUp();
-    return true;
+    swipe();
+    return { ifAdded: true, animationChange };
   }
 }
-function addColumnNumDown() {
-  let isNeedToSwitch = true;
-  for (let i = 15; i > 3; i--) {
-    if (
-      squares[i].innerHTML === squares[i - 4].innerHTML &&
-      squares[i].innerHTML !== ""
-    ) {
-      isNeedToSwitch = false;
-      squares[i].style.animation = "changesize 0.5s";
-      squares[i - 4].style.animation = "movedown-1 0.2s";
-      let total = parseInt(squares[i].innerHTML) * 2;
-      squares[i].innerHTML = total;
-      squares[i - 4].innerHTML = "";
+// control the swipe animation
+function swipeAnimation(direction, slideCount) {
+  let newSquare = [0, 0, 0, 0];
+  let animationArray = [];
+  for (let i = 4, j = 0; i < 8; i++, j += 3) {
+    newSquare[i] = slideCount[j];
+    newSquare[i + 4] = slideCount[j + 1];
+    newSquare[i + 8] = slideCount[j + 2];
+  }
+
+  if (direction === "right") {
+    animationArray = rotateSquare2(newSquare);
+  }
+  if (direction === "left") {
+    animationArray = rotateSquare2(rotateSquare2(rotateSquare2(newSquare)));
+  }
+  if (direction === "down") {
+    animationArray = rotateSquare2(rotateSquare2(newSquare));
+  }
+  if (direction === "up") {
+    animationArray = newSquare;
+  }
+  for (let i = 0; i < 16; i++) {
+    if (animationArray[i] !== 0) {
+      squares[i].style.animation = `move${direction}-${animationArray[i]} 0.2s`;
     }
   }
-  if (isNeedToSwitch) {
-    chectResult();
-    return false;
-  } else {
-    swipeDown();
-    return true;
+}
+// control the add animation
+function addAnimation(direction, animationChange) {
+  let newSquare2 = [];
+  let animationArray = [];
+  for (const item in animationChange) {
+    for (let i = 0; i < 16; i++) {
+      if (item == i) {
+        newSquare2[i] = animationChange[item];
+      }
+      if (!newSquare2[i]) {
+        newSquare2[i] = 0;
+      }
+    }
+  }
+
+  if (direction === "right") {
+    animationArray = rotateSquare2(newSquare2);
+  }
+  if (direction === "left") {
+    animationArray = rotateSquare2(rotateSquare2(rotateSquare2(newSquare2)));
+  }
+  if (direction === "down") {
+    animationArray = rotateSquare2(rotateSquare2(newSquare2));
+  }
+  if (direction === "up") {
+    animationArray = newSquare2;
+  }
+  for (let i = 0; i < 16; i++) {
+    if (animationArray[i] === 1) {
+      squares[i].style.animation = "changesize 0.5s";
+    }
+    if (animationArray[i] === 2) {
+      squares[i].style.animation = `move${direction}-1 0.2s`;
+    }
   }
 }
 
@@ -383,25 +333,35 @@ function control(e) {
 }
 // to the right
 document.addEventListener("keyup", control);
+
 function keyRight() {
-  console.log("keyright");
   switchLeft = true;
   switchDown = true;
   switchUp = true;
+
   if (switchRight) {
-    let ifSwiped = swipeRight();
-    let ifAdded = addRightRowNum();
+    rotateSquare();
+    let { ifSwiped, slideCount } = swipe();
+    let { ifAdded, animationChange } = add();
+    console.log(ifAdded, ifSwiped);
+    resetSquare();
+
+    // control the swipe animation
+    swipeAnimation("right", slideCount);
+    // contro the animation after added
+    addAnimation("right", animationChange);
+
     if (ifSwiped || ifAdded) {
       generateNum();
       score++;
       scoreDisplay.innerHTML = score;
     }
+
     if (!ifAdded && !ifSwiped) {
       switchRight = false;
     }
+    generateColor();
   }
-
-  generateColor();
 }
 
 function keyLeft() {
@@ -409,8 +369,19 @@ function keyLeft() {
   switchDown = true;
   switchUp = true;
   if (switchLeft) {
-    let ifSwiped = swipeLeft();
-    let ifAdded = addLeftRowNum();
+    rotateSquare();
+    rotateSquare();
+    rotateSquare();
+    let { ifSwiped, slideCount } = swipe();
+    let { ifAdded, animationChange } = add();
+    resetSquare();
+    resetSquare();
+    resetSquare();
+    // control the swipe animation
+    swipeAnimation("left", slideCount);
+    // contro the animation after added
+    addAnimation("left", animationChange);
+
     if (ifAdded || ifSwiped) {
       score++;
       scoreDisplay.innerHTML = score;
@@ -428,8 +399,12 @@ function keyUp() {
   switchLeft = true;
   switchDown = true;
   if (switchUp) {
-    let ifSwiped = swipeUp();
-    let ifAdded = addColumnNumUp();
+    let { ifSwiped, slideCount } = swipe();
+    let { ifAdded, animationChange } = add();
+    // control the swipe animation
+    swipeAnimation("up", slideCount);
+    // contro the animation after added
+    addAnimation("up", animationChange);
     if (ifAdded || ifSwiped) {
       score++;
       scoreDisplay.innerHTML = score;
@@ -447,8 +422,18 @@ function keyDown() {
   switchLeft = true;
   switchUp = true;
   if (switchDown) {
-    let ifSwiped = swipeDown();
-    let ifAdded = addColumnNumDown();
+    rotateSquare();
+    rotateSquare();
+
+    let { ifSwiped, slideCount } = swipe();
+    let { ifAdded, animationChange } = add();
+    resetSquare();
+    resetSquare();
+    // control the swipe animation
+    swipeAnimation("down", slideCount);
+    // contro the animation after added
+    addAnimation("down", animationChange);
+
     if (ifAdded || ifSwiped) {
       score++;
       scoreDisplay.innerHTML = score;

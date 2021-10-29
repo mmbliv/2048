@@ -8,6 +8,7 @@ bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
 
 // create a play border
 let squares = [];
+
 let switchRight = true;
 let switchLeft = true;
 let switchUp = true;
@@ -70,13 +71,13 @@ function createBorder() {
     squareParent.appendChild(square);
     gridDisplay.appendChild(squareParent);
     squares.push(square);
-    squareParents.push(squareParent);
   }
 
   generateNum();
   generateNum();
   generateColor();
 }
+
 createBorder();
 
 // generate color
@@ -106,7 +107,6 @@ function generateColor() {
       squares[i].style.backgroundColor = "#cce7e8";
     } else {
       squares[i].style.backgroundColor = "#D2d7e2";
-      //   squares[i].style.color = "transparent";
     }
   }
 }
@@ -139,7 +139,6 @@ document.getElementById("reset").addEventListener("click", function reStart() {
   generateNum();
   generateColor();
 });
-// document.querySelectorAll(".play").addEventListener("click", reStart);
 
 // remove  annimation
 function removeAnnimation() {
@@ -147,11 +146,11 @@ function removeAnnimation() {
     for (let i = 0; i < 16; i++) {
       squares[i].style.animation = "";
     }
-  }, 2000);
+  }, 1000);
 }
 removeAnnimation();
 // check the result
-function chectResult() {
+function checkForLose() {
   let zeroNum = 0;
   for (let i = 0; i < 16; i++) {
     if (
@@ -164,6 +163,18 @@ function chectResult() {
     if (i < 11 && squares[i].innerHTML === squares[i + 4].innerHTML) {
       return;
     }
+    if (squares[i].innerHTML === "") {
+      zeroNum++;
+    }
+  }
+  if (zeroNum === 0) {
+    containerDisplay.style.marginLeft = "9.5rem";
+    lostDisplay.style.display = "block";
+    document.removeEventListener("keyup", control);
+  }
+}
+function checkForWin() {
+  for (let i = 0; i < 16; i++) {
     if (squares[i].innerHTML == 2048) {
       containerDisplay.style.marginLeft = "9.5rem";
       winDisplay.style.display = "block";
@@ -174,17 +185,10 @@ function chectResult() {
       } else {
         if (score < bestScore) {
           localStorage.setItem("bestScore", score);
+          bestScoreDisplay.innerHTML = localStorage.getItem("bestScore");
         }
       }
     }
-    if (squares[i].innerHTML === "") {
-      zeroNum++;
-    }
-  }
-  if (zeroNum === 0) {
-    containerDisplay.style.marginLeft = "9.5rem";
-    lostDisplay.style.display = "block";
-    document.removeEventListener("keyup", control);
   }
 }
 
@@ -247,7 +251,6 @@ function add() {
   }
 
   if (isNeedToSwitch) {
-    chectResult();
     return { ifAdded: false, animationChange };
   } else {
     swipe();
@@ -358,8 +361,10 @@ function keyRight() {
     }
 
     if (!ifAdded && !ifSwiped) {
+      checkForLose();
       switchRight = false;
     }
+    checkForWin();
     generateColor();
   }
 }
@@ -388,11 +393,12 @@ function keyLeft() {
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {
+      checkForLose();
       switchLeft = false;
     }
+    checkForWin();
+    generateColor();
   }
-
-  generateColor();
 }
 function keyUp() {
   switchRight = true;
@@ -411,11 +417,12 @@ function keyUp() {
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {
+      checkForLose();
       switchUp = false;
     }
+    checkForWin();
+    generateColor();
   }
-
-  generateColor();
 }
 function keyDown() {
   switchRight = true;
@@ -440,9 +447,10 @@ function keyDown() {
       generateNum();
     }
     if (!ifAdded && !ifSwiped) {
+      checkForLose();
       switchDown = false;
     }
+    checkForWin();
+    generateColor();
   }
-
-  generateColor();
 }

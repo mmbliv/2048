@@ -6,11 +6,15 @@
 }
 
 .container {
+  position: relative;
   width: 620px;
-  margin: 3rem auto;
+  margin: 0 auto;
   display: flex;
-  height: 440px;
+  height: 50vw;
+
   box-sizing: border-box;
+  padding-top: 10rem;
+
   /* margin-left: 9.5rem; */
 }
 .show-board {
@@ -109,9 +113,6 @@
 img {
   width: 400px;
   height: 420px;
-  position: absolute;
-  top: 3rem;
-  right: 10.5rem;
 }
 /* .play {
   height: 60px;
@@ -129,7 +130,10 @@ img {
   border: darkgoldenrod;
   box-shadow: 2px 5px 3px 0px rgba(0, 0, 0, 0.5);
 } */
-
+.result {
+  position: absolute;
+  right: -400px;
+}
 .result #win {
   display: none;
 }

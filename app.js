@@ -170,7 +170,6 @@ function checkForLose() {
     }
   }
   if (zeroNum === 0) {
-    containerDisplay.style.marginLeft = "9.5rem";
     lostDisplay.style.display = "block";
     document.removeEventListener("keyup", control);
     let worstScore = localStorage.getItem("worstScore");
@@ -188,7 +187,6 @@ function checkForLose() {
 function checkForWin() {
   for (let i = 0; i < 16; i++) {
     if (squares[i].innerHTML == 2048) {
-      containerDisplay.style.marginLeft = "9.5rem";
       winDisplay.style.display = "block";
       document.removeEventListener("keyup", control);
       let bestScore = localStorage.getItem("bestScore");
